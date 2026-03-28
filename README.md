@@ -82,7 +82,7 @@ App Launch
 The app is divided into three layers that never cross-call each other:
 
 **Screens — View layer**
-Screens contain only UI code. They listen to a controller via `ListenableBuilder` and call controller methods on user actions. No screen ever touches the database or file system directly.
+Screens contain only UI code. They listen to a controller via `addListener` + `setState` and call controller methods on user actions. No screen ever touches the database or file system directly.
 
 **Controllers — Logic layer**
 `HomeController` handles the folder list, search, sort, and folder CRUD. `FolderController` handles file operations, PIN verification, and reordering within a single folder. Both extend `ChangeNotifier` — state changes call `notifyListeners()` and the UI rebuilds automatically. Because controllers receive their services via constructor injection, they can be tested without a real device or database.
