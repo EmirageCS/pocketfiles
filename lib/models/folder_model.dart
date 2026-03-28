@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// Represents a folder that groups files together.
+///
+/// [pinSalt] and [answerSalt] are legacy fields kept for transparent migration
+/// from SHA-256 to bcrypt hashing. They are null for all newly created folders.
 class FolderModel {
   final int? id;
   final String name;
@@ -64,7 +68,7 @@ class FolderModel {
       other is FolderModel && runtimeType == other.runtimeType && id == other.id;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => id?.hashCode ?? Object.hash(name, color, createdAt);
 
   late final Color _cachedColor = _computeColor();
 
@@ -79,7 +83,7 @@ class FolderModel {
     }
   }
 
-  // Converts a Flutter Color to the 'ffrrggbb' hex format used in DB
+  /// Converts a Flutter [Color] to the `ffrrggbb` hex format stored in the DB.
   static String colorToHex(Color color) {
     final r = (color.r * 255).round().toRadixString(16).padLeft(2, '0');
     final g = (color.g * 255).round().toRadixString(16).padLeft(2, '0');
@@ -104,6 +108,9 @@ class FolderModel {
       'lastUnlockedAt': lastUnlockedAt?.toIso8601String(),
     };
   }
+
+  @override
+  String toString() => 'FolderModel(id: $id, name: $name, isLocked: $isLocked)';
 
   factory FolderModel.fromMap(Map<String, dynamic> map) {
     return FolderModel(

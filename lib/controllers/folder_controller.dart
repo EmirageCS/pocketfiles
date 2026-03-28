@@ -173,7 +173,7 @@ class FolderController extends ChangeNotifier {
 
   void _applySort() {
     final filtered = _searchQuery.isEmpty
-        ? _files
+        ? [..._files]
         : _files.where((f) => f.name.toLowerCase().contains(_searchQuery)).toList();
 
     if (_sortBy == SortMode.custom) {

@@ -60,7 +60,7 @@ class _RenameFileDialogState extends State<RenameFileDialog> {
         },
         onSubmitted: (_) => _submit(),
         decoration: AppTheme.inputDecoration(
-          _ext.isNotEmpty ? 'File name (without .$_ext)' : 'File name',
+          _ext.isNotEmpty ? 'File name (without $_ext)' : 'File name',
           error: _nameError ? 'Name cannot be empty' : null,
         ),
       ),

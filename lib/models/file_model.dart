@@ -1,4 +1,5 @@
-﻿// Files are physically copied to the app's documents directory on import.
+﻿/// Represents a file stored inside a folder.
+/// Files are physically copied to the app's documents directory on import.
 class FileModel {
   final int? id;
   final int folderId;
@@ -42,7 +43,7 @@ class FileModel {
       other is FileModel && runtimeType == other.runtimeType && id == other.id;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => id?.hashCode ?? Object.hash(folderId, name, createdAt);
 
   Map<String, dynamic> toMap() {
     return {
@@ -55,6 +56,9 @@ class FileModel {
       'createdAt': createdAt.toIso8601String(),
     };
   }
+
+  @override
+  String toString() => 'FileModel(id: $id, name: $name, folderId: $folderId, size: $size)';
 
   factory FileModel.fromMap(Map<String, dynamic> map) {
     return FileModel(

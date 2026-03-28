@@ -36,8 +36,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     _controller = HomeController(StorageService())
-      ..addListener(_onControllerUpdate)
-      ..loadFolders(showLoading: true);
+      ..addListener(_onControllerUpdate);
+    _initController();
     _checkOnboarding();
     _searchController.addListener(_onSearchChanged);
     WidgetsBinding.instance.addObserver(this);
@@ -45,6 +45,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   void _onControllerUpdate() {
     if (mounted) setState(() {});
+  }
+
+  Future<void> _initController() async {
+    await _controller.loadSortMode();
+    await _controller.loadFolders(showLoading: true);
   }
 
   Future<void> _checkOnboarding() async {
@@ -209,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  void _handleLockToggle(FolderModel folder) {
+  Future<void> _handleLockToggle(FolderModel folder) async {
     if (folder.isLocked && !_controller.isFolderUnlocked(folder.id!)) {
       PinDialogs.showUnlock(context, folder, () async {
         try {
@@ -220,10 +225,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         }
       });
     } else if (folder.isLocked) {
-      _controller.removeFolderLock(folder.id!).catchError((Object e, stack) {
+      try {
+        await _controller.removeFolderLock(folder.id!);
+      } catch (e, stack) {
         debugPrint('removeFolderLock error: $e\n$stack');
         if (mounted) _showSnackBar('Failed to remove lock');
-      }).ignore();
+      }
     } else {
       PinDialogs.showSetPin(context, folder, () => _controller.loadFolders());
     }
@@ -342,12 +349,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
               onSelected: (value) {
-                if (value == 'sort_custom') { _controller.setSortMode(FolderSortMode.custom); }
-                if (value == 'sort_name') { _controller.setSortMode(FolderSortMode.name); }
-                if (value == 'sort_date') { _controller.setSortMode(FolderSortMode.date); }
-                if (value == 'theme') { widget.themeController.cycle(); }
-                if (value == 'help') { HelpSheet.show(context); }
-                if (value == 'settings') { PinDialogs.showMasterPinSettings(context); }
+                switch (value) {
+                  case 'sort_custom': _controller.setSortMode(FolderSortMode.custom);
+                  case 'sort_name':   _controller.setSortMode(FolderSortMode.name);
+                  case 'sort_date':   _controller.setSortMode(FolderSortMode.date);
+                  case 'theme':       widget.themeController.cycle();
+                  case 'help':        HelpSheet.show(context);
+                  case 'settings':    PinDialogs.showMasterPinSettings(context);
+                }
               },
               itemBuilder: (_) {
                 final c = _controller.sortMode;

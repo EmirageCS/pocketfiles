@@ -24,7 +24,7 @@ class PocketFilesApp extends StatefulWidget {
 }
 
 class _PocketFilesAppState extends State<PocketFilesApp> {
-  final _themeController = ThemeController();
+  final _themeController = ThemeController(StorageService());
 
   @override
   void initState() {

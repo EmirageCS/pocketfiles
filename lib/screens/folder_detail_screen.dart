@@ -154,7 +154,7 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
     }
   }
 
-  Future<void> _deleteFile(FileModel file) async {
+  Future<bool> _confirmDelete(FileModel file) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -168,14 +168,16 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: Text('Delete',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.error)),
+                style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),
     );
-    if (confirmed != true || !mounted) return;
+    return confirmed == true;
+  }
 
+  Future<void> _deleteFile(FileModel file) async {
+    if (!await _confirmDelete(file) || !mounted) return;
     final ok = await _controller.deleteFile(file);
     if (!mounted) return;
     if (ok) {
@@ -397,26 +399,7 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
           await _shareFile(file);
           return false; // don't remove from list — share doesn't delete
         } else {
-          final confirmed = await showDialog<bool>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Delete File'),
-              content: Text('Are you sure you want to delete "${file.name}"?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: Text('Delete',
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.error)),
-                ),
-              ],
-            ),
-          );
-          return confirmed == true;
+          return _confirmDelete(file);
         }
       },
       onDismissed: (_) async {
@@ -439,65 +422,65 @@ class _FolderDetailScreenState extends State<FolderDetailScreen> {
           ],
         ),
         child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: AppWidgets.iconBox(color, FileService.getFileIcon(file.name)),
-        title: Text(file.name,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis),
-        subtitle: Text(
-          '${FileService.formatDate(file.createdAt)} · ${FileService.formatSize(file.size)}',
-          style: TextStyle(color: Theme.of(context).colorScheme.outline, fontSize: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          leading: AppWidgets.iconBox(color, FileService.getFileIcon(file.name)),
+          title: Text(file.name,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis),
+          subtitle: Text(
+            '${FileService.formatDate(file.createdAt)} · ${FileService.formatSize(file.size)}',
+            style: TextStyle(color: Theme.of(context).colorScheme.outline, fontSize: 12),
+          ),
+          trailing: PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert_rounded),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                value: 'open',
+                child: Row(children: [
+                  Icon(Icons.open_in_new_rounded, size: 18),
+                  SizedBox(width: 8),
+                  Text('Open'),
+                ]),
+              ),
+              PopupMenuItem(
+                value: 'share',
+                child: Row(children: [
+                  Icon(Icons.share_rounded, size: 18),
+                  SizedBox(width: 8),
+                  Text('Share'),
+                ]),
+              ),
+              PopupMenuItem(
+                value: 'rename',
+                child: Row(children: [
+                  Icon(Icons.drive_file_rename_outline_rounded, size: 18),
+                  SizedBox(width: 8),
+                  Text('Rename'),
+                ]),
+              ),
+              PopupMenuItem(
+                value: 'delete',
+                child: Row(children: [
+                  Icon(Icons.delete_rounded, size: 18, color: Colors.red),
+                  SizedBox(width: 8),
+                  Text('Delete', style: TextStyle(color: Colors.red)),
+                ]),
+              ),
+            ],
+            onSelected: (value) {
+              switch (value) {
+                case 'open':   _openFile(file);
+                case 'share':  _shareFile(file);
+                case 'rename': _renameFile(file);
+                case 'delete': _deleteFile(file);
+              }
+            },
+          ),
+          onTap: () => _openFile(file),
         ),
-        trailing: PopupMenuButton<String>(
-          icon: const Icon(Icons.more_vert_rounded),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          itemBuilder: (_) => const [
-            PopupMenuItem(
-              value: 'open',
-              child: Row(children: [
-                Icon(Icons.open_in_new_rounded, size: 18),
-                SizedBox(width: 8),
-                Text('Open'),
-              ]),
-            ),
-            PopupMenuItem(
-              value: 'share',
-              child: Row(children: [
-                Icon(Icons.share_rounded, size: 18),
-                SizedBox(width: 8),
-                Text('Share'),
-              ]),
-            ),
-            PopupMenuItem(
-              value: 'rename',
-              child: Row(children: [
-                Icon(Icons.drive_file_rename_outline_rounded, size: 18),
-                SizedBox(width: 8),
-                Text('Rename'),
-              ]),
-            ),
-            PopupMenuItem(
-              value: 'delete',
-              child: Row(children: [
-                Icon(Icons.delete_rounded, size: 18, color: Colors.red),
-                SizedBox(width: 8),
-                Text('Delete', style: TextStyle(color: Colors.red)),
-              ]),
-            ),
-          ],
-          onSelected: (value) {
-            switch (value) {
-              case 'open':   _openFile(file);
-              case 'share':  _shareFile(file);
-              case 'rename': _renameFile(file);
-              case 'delete': _deleteFile(file);
-            }
-          },
-        ),
-        onTap: () => _openFile(file),
       ),
-    ),
     );
   }
 }

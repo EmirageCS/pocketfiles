@@ -189,8 +189,6 @@ class StorageService implements IStorageService {
     };
   }
 
-  /// Deletes the folder, its files, and its failed-attempt records atomically,
-  /// then removes the folder's directory from disk.
   /// Searches file names across all folders, joining with folder names.
   @override
   Future<List<({FileModel file, String folderName})>> searchFiles(
@@ -222,6 +220,8 @@ class StorageService implements IStorageService {
     };
   }
 
+  /// Deletes the folder, its files, and its failed-attempt records atomically,
+  /// then removes the folder's directory from disk.
   @override
   Future<void> deleteFolder(int id) async {
     final db = await database;

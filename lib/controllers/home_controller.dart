@@ -47,6 +47,15 @@ class HomeController extends ChangeNotifier {
   // Folder list state
   // ---------------------------------------------------------------------------
 
+  /// Loads the persisted folder sort mode from storage.
+  Future<void> loadSortMode() async {
+    final saved = await _storage.getSetting(StorageKeys.folderSortMode);
+    _sortMode = FolderSortMode.values.firstWhere(
+      (e) => e.name == saved,
+      orElse: () => FolderSortMode.custom,
+    );
+  }
+
   /// Fetches folders and file counts from storage.
   /// Pass [showLoading] = true on first load to show the spinner.
   Future<void> loadFolders({bool showLoading = false}) async {
@@ -86,11 +95,13 @@ class HomeController extends ChangeNotifier {
     _filteredFolders = list;
   }
 
-  /// Changes folder sort mode and re-applies filter.
+  /// Changes folder sort mode, re-applies filter, and persists the choice.
   void setSortMode(FolderSortMode mode) {
     _sortMode = mode;
     _applySearch(_searchQuery);
     notifyListeners();
+    _storage.setSetting(StorageKeys.folderSortMode, mode.name)
+        .catchError((e) => debugPrint('setSortMode persist failed: $e'));
   }
 
   // ---------------------------------------------------------------------------

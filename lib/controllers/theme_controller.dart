@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import '../services/storage_service.dart';
+import '../services/i_storage_service.dart';
 import '../utils/constants.dart';
 
 /// Persists and exposes the user's preferred [ThemeMode].
 ///
 /// Calling [cycle] rotates through `system → light → dark → system`.
 /// The choice is stored in the settings table and restored on next launch.
-///
-/// This controller follows the same singleton pattern as [StorageService]:
-/// the root widget creates it, loads it once, and passes it down to screens
-/// that need to trigger theme changes.
 class ThemeController extends ChangeNotifier {
+  final IStorageService _storage;
+
   ThemeMode _mode = ThemeMode.system;
+
+  ThemeController(this._storage);
 
   /// The currently active theme mode.
   ThemeMode get mode => _mode;
@@ -32,7 +32,7 @@ class ThemeController extends ChangeNotifier {
 
   /// Loads the saved preference from storage. Call once from [initState].
   Future<void> init() async {
-    final saved = await StorageService().getSetting(StorageKeys.themeMode);
+    final saved = await _storage.getSetting(StorageKeys.themeMode);
     final loaded = _fromString(saved);
     if (loaded != _mode) {
       _mode = loaded;
@@ -48,7 +48,7 @@ class ThemeController extends ChangeNotifier {
       ThemeMode.dark   => ThemeMode.system,
     };
     notifyListeners();
-    await StorageService().setSetting(StorageKeys.themeMode, _mode.name);
+    await _storage.setSetting(StorageKeys.themeMode, _mode.name);
   }
 
   static ThemeMode _fromString(String? value) => switch (value) {

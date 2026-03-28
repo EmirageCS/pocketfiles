@@ -16,6 +16,8 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final _searchController = TextEditingController();
+  final _storage = StorageService();
+  final _fileService = FileService();
   Timer? _debounce;
   List<({FileModel file, String folderName})> _results = [];
   bool _isSearching = false;
@@ -36,14 +38,14 @@ class _SearchScreenState extends State<SearchScreen> {
     }
     setState(() => _isSearching = true);
     _debounce = Timer(const Duration(milliseconds: kSearchDebounceMs), () async {
-      final results = await StorageService().searchFiles(query.trim());
+      final results = await _storage.searchFiles(query.trim());
       if (mounted) setState(() { _results = results; _isSearching = false; _hasSearched = true; });
     });
   }
 
   Future<void> _openFile(FileModel file) async {
     try {
-      await FileService().openFile(file);
+      await _fileService.openFile(file);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

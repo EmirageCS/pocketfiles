@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pocketfiles/controllers/theme_controller.dart';
+import 'package:pocketfiles/services/i_storage_service.dart';
 import 'package:pocketfiles/utils/constants.dart';
 import 'package:pocketfiles/widgets/color_palette_picker.dart';
 import 'package:pocketfiles/widgets/dialogs/lockout_banner.dart';
+
+class _NoopStorage implements IStorageService {
+  @override dynamic noSuchMethod(Invocation i) => throw UnimplementedError();
+  @override Future<String?> getSetting(String key) async => null;
+  @override Future<void> setSetting(String key, String value) async {}
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -18,17 +25,17 @@ Widget _wrap(Widget child) => MaterialApp(home: Scaffold(body: child));
 void main() {
   group('ThemeController', () {
     test('starts in system mode', () {
-      final ctrl = ThemeController();
+      final ctrl = ThemeController(_NoopStorage());
       expect(ctrl.mode, ThemeMode.system);
     });
 
     test('system mode icon is brightness_auto', () {
-      final ctrl = ThemeController();
+      final ctrl = ThemeController(_NoopStorage());
       expect(ctrl.icon, Icons.brightness_auto_rounded);
     });
 
     test('system mode tooltip is correct', () {
-      final ctrl = ThemeController();
+      final ctrl = ThemeController(_NoopStorage());
       expect(ctrl.tooltip, 'Theme: System');
     });
   });

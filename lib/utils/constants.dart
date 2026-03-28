@@ -77,6 +77,9 @@ abstract final class StorageKeys {
   static const String masterPinAttempts = 'masterPinAttempts';
   static const String themeMode         = 'themeMode';
 
+  /// Global folder sort-mode preference key (home screen).
+  static const String folderSortMode = 'folderSortMode';
+
   /// Per-folder sort-mode preference key.
   static String sortMode(int folderId) => 'sortMode_$folderId';
 
