@@ -17,8 +17,7 @@
 
 ### Security
 
-- `FLAG_SECURE` blocks screenshots and recent-apps thumbnails of sensitive content
-- Wider PIN range (up to 8 digits) enables stronger PINs without bypassing bcrypt
+- Wider PIN range (up to 8 digits) allows stronger PINs
 
 ---
 
