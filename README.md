@@ -106,9 +106,11 @@ Screens contain only UI code. They listen to a controller via `ListenableBuilder
 
 ```
 lib/
+├── main.dart
 ├── controllers/
 │   ├── home_controller.dart       # folder list, search, sort, CRUD
-│   └── folder_controller.dart     # file ops, PIN unlock, reorder
+│   ├── folder_controller.dart     # file ops, PIN unlock, reorder
+│   └── theme_controller.dart      # light / dark / system theme
 ├── models/
 │   ├── folder_model.dart
 │   └── file_model.dart
@@ -122,16 +124,25 @@ lib/
 │   ├── i_storage_service.dart     # interface for mocking
 │   └── i_file_service.dart
 ├── widgets/
-│   ├── dialogs/                   # Unlock, SetPin, ForgotPin, MasterPin,
-│   │                              # Rename, ChangeColor
+│   ├── dialogs/
+│   │   ├── unlock_dialog.dart
+│   │   ├── set_pin_dialog.dart
+│   │   ├── forgot_pin_dialog.dart
+│   │   ├── master_pin_dialog.dart
+│   │   ├── rename_folder_dialog.dart
+│   │   ├── rename_file_dialog.dart
+│   │   ├── change_color_dialog.dart
+│   │   └── lockout_banner.dart
 │   ├── folder_card.dart
+│   ├── color_palette_picker.dart
 │   ├── help_sheet.dart
-│   ├── lockout_banner.dart
+│   ├── pin_dialogs.dart
 │   └── security_alert_dialog.dart
 └── utils/
     ├── constants.dart
     ├── pin_hasher.dart
     ├── app_theme.dart
+    ├── app_colors.dart
     └── backup_excluder.dart
 ```
 
