@@ -56,9 +56,9 @@ App Launch
     │   └─► Locked ──► Unlock Dialog
     │                   ├─► Enter PIN ──► bcrypt.verify()
     │                   │   ├─► Match ──► record unlock ──► open folder
-    │                   │   └─► Wrong ──► log attempt ──► 5 fails = 30-min lockout
+    │                   │   └─► Wrong ──► log attempt ──► 3 fails = 60-sec lockout
     │                   └─► Forgot PIN? ──► security question ──► bcrypt.verify()
-    │                        └─► Match ──► set new PIN
+    │                        └─► Match ──► open folder
     │
     ├─► Search icon ──► Global Search Screen
     │   └─► type query ──► search files across ALL folders ──► tap to open
