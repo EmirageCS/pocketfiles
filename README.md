@@ -162,6 +162,10 @@ lib/
 | --- | --- | --- |
 | ![Help](screenshots/help_screen.png) | ![Empty](screenshots/home_empty.png) | ![Dark](screenshots/home_dark.png) |
 
+| Lockout | Forgot PIN | Security Alert | Folder Detail (dark) |
+| --- | --- | --- | --- |
+| ![Lockout](screenshots/lockout_dialog.png) | ![Forgot PIN](screenshots/forgot_pin_dialog.png) | ![Security Alert](screenshots/security_alert_dialog.png) | ![Folder Detail Dark](screenshots/folder_detail_dark.png) |
+
 ---
 
 ## Setup & Run
