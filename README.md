@@ -148,6 +148,12 @@ lib/
 
 ---
 
+## UI Design (Figma)
+
+[View Figma design →](https://www.figma.com/design/rXrKRBqq455521nxsUZjOH/PocketFiles?node-id=0-1&t=wham4B81Ex4FKsWe-1)
+
+---
+
 ## Screenshots
 
 | Home | Folder Detail | New Folder |
