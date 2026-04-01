@@ -13,9 +13,9 @@ const _snackColor = Color(0xFF43A047); // green — same tone as kFolderPalette
 /// The master PIN can unlock any locked folder and is protected
 /// by its own brute-force lockout (5-minute cooldown).
 class MasterPinDialog extends StatefulWidget {
-  /// Pass [masterInfo] when a master PIN already exists (change flow).
-  /// Pass null to enter the initial setup flow.
-  final ({String hash, String? salt})? masterInfo;
+  /// Pass [masterInfo] (the stored bcrypt hash) when a master PIN already
+  /// exists (change flow). Pass null to enter the initial setup flow.
+  final String? masterInfo;
 
   const MasterPinDialog({super.key, this.masterInfo});
 
@@ -76,8 +76,7 @@ class _MasterPinDialogState extends State<MasterPinDialog> {
       if (widget.masterInfo != null) {
         final matches = await PinHasher.verify(
           _currentPinController.text,
-          widget.masterInfo!.hash,
-          legacySalt: widget.masterInfo!.salt,
+          widget.masterInfo!,
         );
         if (!mounted) return;
         if (!matches) {

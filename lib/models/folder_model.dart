@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 
 /// Represents a folder that groups files together.
-///
-/// [pinSalt] and [answerSalt] are legacy fields kept for transparent migration
-/// from SHA-256 to bcrypt hashing. They are null for all newly created folders.
 class FolderModel {
   final int? id;
   final String name;
   final String color;
   final bool isLocked;
   final String? pin;
-  final String? pinSalt;
   final String? pinHint;
   final String? securityQuestion;
   final String? securityAnswer;
-  final String? answerSalt;
   final int orderIndex;
   final DateTime createdAt;
   final DateTime? lastUnlockedAt;
@@ -25,11 +20,9 @@ class FolderModel {
     required this.color,
     this.isLocked = false,
     this.pin,
-    this.pinSalt,
     this.pinHint,
     this.securityQuestion,
     this.securityAnswer,
-    this.answerSalt,
     this.orderIndex = 0,
     required this.createdAt,
     this.lastUnlockedAt,
@@ -52,11 +45,9 @@ class FolderModel {
     color: color ?? this.color,
     isLocked: isLocked ?? this.isLocked,
     pin: pin,
-    pinSalt: pinSalt,
     pinHint: pinHint,
     securityQuestion: securityQuestion,
     securityAnswer: securityAnswer,
-    answerSalt: answerSalt,
     orderIndex: orderIndex ?? this.orderIndex,
     createdAt: createdAt ?? this.createdAt,
     lastUnlockedAt: lastUnlockedAt ?? this.lastUnlockedAt,
@@ -98,11 +89,9 @@ class FolderModel {
       'color': color,
       'isLocked': isLocked ? 1 : 0,
       'pin': pin,
-      'pinSalt': pinSalt,
       'pinHint': pinHint,
       'securityQuestion': securityQuestion,
       'securityAnswer': securityAnswer,
-      'answerSalt': answerSalt,
       'orderIndex': orderIndex,
       'createdAt': createdAt.toIso8601String(),
       'lastUnlockedAt': lastUnlockedAt?.toIso8601String(),
@@ -119,11 +108,9 @@ class FolderModel {
       color: map['color'],
       isLocked: map['isLocked'] == 1,
       pin: map['pin'],
-      pinSalt: map['pinSalt'],
       pinHint: map['pinHint'],
       securityQuestion: map['securityQuestion'],
       securityAnswer: map['securityAnswer'],
-      answerSalt: map['answerSalt'],
       orderIndex: map['orderIndex'] ?? 0,
       createdAt: DateTime.parse(map['createdAt']),
       lastUnlockedAt: map['lastUnlockedAt'] != null

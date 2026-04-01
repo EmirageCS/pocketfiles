@@ -1,0 +1,11 @@
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+coverage/
+screenshots/
+assets/
+.github/
+.vscode/
+*.md
+*.py

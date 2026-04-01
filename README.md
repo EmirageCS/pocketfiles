@@ -1,5 +1,7 @@
 # PocketFiles
 
+[![CI](https://github.com/EmirageCS/pocketfiles/actions/workflows/ci.yml/badge.svg)](https://github.com/EmirageCS/pocketfiles/actions/workflows/ci.yml)
+
 A secure mobile file manager built with Flutter — COM206 Visual Programming Mid-Term Project.
 
 ---
@@ -90,7 +92,6 @@ Screens contain only UI code. They listen to a controller via `addListener` + `s
 - **Background isolate** — hashing runs via `compute()` so the UI thread never blocks during verification.
 - **Atomic lockout** — failed attempts are logged and counted inside a single SQLite transaction, closing a race condition that could let rapid guesses bypass the counter.
 - **FLAG_SECURE** — set on Android at launch. Prevents the OS from allowing screenshots or screen recording of the app.
-- **Legacy migration** — older installs used SHA-256 hashed PINs. On first correct unlock, the app silently re-hashes to bcrypt and updates the DB.
 
 ---
 
@@ -140,12 +141,6 @@ lib/
 
 ---
 
-## UI Design (Figma)
-
-[View Figma design →](https://www.figma.com/design/rXrKRBqq455521nxsUZjOH/PocketFiles?node-id=0-1&t=wham4B81Ex4FKsWe-1)
-
----
-
 ## Screenshots
 
 | Home | Folder Detail | New Folder |
@@ -181,7 +176,7 @@ Run tests:
 
 ```bash
 flutter test
-# 00:02 +152: All tests passed!
+# 00:02 +148: All tests passed!
 ```
 
 Build release APK:
@@ -202,7 +197,6 @@ flutter build apk --release
 | `open_filex` | ^4.3.4 | Open files with native OS apps |
 | `share_plus` | ^10.0.2 | Share files via system sheet |
 | `path_provider` | ^2.1.2 | App documents directory |
-| `crypto` | ^3.0.7 | SHA-256 for legacy PIN migration |
 | `path` | ^1.9.1 | Cross-platform path handling |
 | `reorderable_grid` | ^1.0.13 | Drag-to-reorder folder grid |
 

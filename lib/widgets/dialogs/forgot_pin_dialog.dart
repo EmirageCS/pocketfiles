@@ -59,22 +59,11 @@ class _ForgotPinDialogState extends State<ForgotPinDialog> {
     var success = false;
     try {
       final matches = widget.folder.securityAnswer != null &&
-          await PinHasher.verify(
-            answer,
-            widget.folder.securityAnswer!,
-            legacySalt: widget.folder.answerSalt,
-          );
+          await PinHasher.verify(answer, widget.folder.securityAnswer!);
       if (!mounted) return;
 
       if (matches) {
         success = true;
-        // Transparent migration from SHA-256 to bcrypt
-        if (!PinHasher.isBcrypt(widget.folder.securityAnswer!)) {
-          PinHasher.hash(answer)
-              .then((h) => StorageService().migrateAnswerToBcrypt(widget.folder.id!, h))
-              .catchError((e) => debugPrint('Answer bcrypt migration failed: $e'))
-              .ignore();
-        }
         _answerController.clear(); // zero answer from memory before dialog closes
         // Await reset so the next dialog open doesn't see stale attempt count.
         await StorageService()

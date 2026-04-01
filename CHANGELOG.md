@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.1] - 2026-04-01
+
+### Changed
+
+- Removed unused SHA-256 legacy migration code — all PINs and answers are now bcrypt-only
+- Simplified `PinHasher.verify()` — no longer accepts a `legacySalt` parameter
+- `getMasterPinInfo()` now returns `String?` instead of a named record with a redundant salt field
+
+### Infrastructure
+
+- Added GitHub Actions CI workflow — runs `flutter analyze` and `flutter test` on every push and PR; builds release APK on main
+- Pinned Flutter version to 3.41.4 in Dockerfile
+- Added `.dockerignore` to keep build context lean
+
+---
+
 ## [1.1.0] - 2026-03-27
 
 ### Added
@@ -51,7 +67,6 @@
 
 - bcrypt hashing for PINs and security answers (work factor 10)
 - Hashing performed in a background isolate via `compute()`
-- Transparent migration from legacy SHA-256 hashes to bcrypt
 - Failed attempt logging with timestamps and per-folder tracking
 - Last successful unlock tracking to filter stale failed attempts
 - Locked folder files can be moved (original deleted) for privacy

@@ -38,7 +38,7 @@ abstract class IStorageService {
   Future<void> setOnboardingDone();
 
   Future<void> setMasterPin(String pin);
-  Future<({String hash, String? salt})?> getMasterPinInfo();
+  Future<String?> getMasterPinInfo();
   Future<int> incrementMasterPinAttempts();
   Future<void> resetMasterPinAttempts();
 
@@ -51,7 +51,4 @@ abstract class IStorageService {
   Future<void> clearFailedAttempts(int folderId);
   Future<void> pruneOldFailedAttempts();
   Future<void> recordSuccessfulUnlock(int folderId);
-
-  Future<void> migratePinToBcrypt(int folderId, String bcryptHash);
-  Future<void> migrateAnswerToBcrypt(int folderId, String bcryptHash);
 }

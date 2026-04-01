@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     libglu1-mesa \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone --depth 1 --branch stable https://github.com/flutter/flutter.git ${FLUTTER_HOME}
+RUN git clone --depth 1 --branch 3.41.4 https://github.com/flutter/flutter.git ${FLUTTER_HOME}
 
 RUN flutter precache --no-android --no-ios --no-web
 RUN flutter config --no-analytics

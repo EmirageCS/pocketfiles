@@ -272,10 +272,7 @@ void main() {
     });
 
     testWidgets('change mode: shows current PIN field', (tester) async {
-      const info = (
-        hash: r'$2b$10$aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        salt: null,
-      );
+      const info = r'$2b$10$aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
       await tester.pumpWidget(_wrap(const MasterPinDialog(masterInfo: info)));
       await tester.pump();
       expect(find.textContaining('Enter your current master PIN'), findsOneWidget);

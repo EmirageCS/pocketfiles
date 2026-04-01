@@ -66,7 +66,7 @@ class _MockStorage implements IStorageService {
   @override Future<String?>        getSetting(String key)                  => throw UnimplementedError();
   @override Future<void>           setSetting(String key, String value)    => throw UnimplementedError();
   @override Future<void>           setMasterPin(String pin)                => throw UnimplementedError();
-  @override Future<({String hash, String? salt})?>  getMasterPinInfo()     => throw UnimplementedError();
+  @override Future<String?>         getMasterPinInfo()                     => throw UnimplementedError();
   @override Future<int>            incrementMasterPinAttempts()            => throw UnimplementedError();
   @override Future<void>           resetMasterPinAttempts()                => throw UnimplementedError();
   @override Future<({int count, DateTime? lastAttempt})> logFailedAttemptAndGet(int folderId) => throw UnimplementedError();
@@ -75,8 +75,6 @@ class _MockStorage implements IStorageService {
   @override Future<void>           clearFailedAttempts(int folderId)       async {}
   @override Future<void>           pruneOldFailedAttempts()                => throw UnimplementedError();
   @override Future<void>           recordSuccessfulUnlock(int folderId)    async {}
-  @override Future<void>           migratePinToBcrypt(int id, String h)    => throw UnimplementedError();
-  @override Future<void>           migrateAnswerToBcrypt(int id, String h) => throw UnimplementedError();
 }
 
 // ---------------------------------------------------------------------------

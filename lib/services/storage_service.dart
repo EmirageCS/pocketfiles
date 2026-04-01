@@ -421,19 +421,12 @@ class StorageService implements IStorageService {
   }
 
   @override
-  Future<({String hash, String? salt})?> getMasterPinInfo() async {
+  Future<String?> getMasterPinInfo() async {
     final db = await database;
     final result = await db.query('settings',
-        where: 'key = ? OR key = ?',
-        whereArgs: [StorageKeys.masterPin, StorageKeys.masterPinSalt]);
+        where: 'key = ?', whereArgs: [StorageKeys.masterPin]);
     if (result.isEmpty) return null;
-    String? hash, salt;
-    for (final row in result) {
-      if (row['key'] == StorageKeys.masterPin) hash = row['value'] as String?;
-      if (row['key'] == StorageKeys.masterPinSalt) salt = row['value'] as String?;
-    }
-    if (hash == null) return null;
-    return (hash: hash, salt: salt);
+    return result.first['value'] as String?;
   }
 
   @override
@@ -576,27 +569,4 @@ class StorageService implements IStorageService {
     );
   }
 
-  // Transparent migration: rehash legacy SHA-256 PIN to bcrypt in-place
-  @override
-  Future<void> migratePinToBcrypt(int folderId, String bcryptHash) async {
-    final db = await database;
-    await db.update(
-      'folders',
-      {'pin': bcryptHash, 'pinSalt': null},
-      where: 'id = ?',
-      whereArgs: [folderId],
-    );
-  }
-
-  // Transparent migration: rehash legacy SHA-256 answer to bcrypt in-place
-  @override
-  Future<void> migrateAnswerToBcrypt(int folderId, String bcryptHash) async {
-    final db = await database;
-    await db.update(
-      'folders',
-      {'securityAnswer': bcryptHash, 'answerSalt': null},
-      where: 'id = ?',
-      whereArgs: [folderId],
-    );
-  }
 }

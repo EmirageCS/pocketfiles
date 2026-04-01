@@ -10,7 +10,7 @@ import 'lockout_banner.dart';
 
 /// Dialog for unlocking a PIN-protected folder.
 /// Handles brute-force protection, countdown lockout, PIN hint display,
-/// master PIN verification, and transparent SHA-256→bcrypt migration.
+/// and master PIN verification.
 class UnlockDialog extends StatefulWidget {
   final FolderModel folder;
   final VoidCallback onSuccess;
@@ -104,31 +104,14 @@ class _UnlockDialogState extends State<UnlockDialog> {
       if (!mounted) return;
 
       final pinMatches = widget.folder.pin != null &&
-          await PinHasher.verify(
-            _pinController.text,
-            widget.folder.pin!,
-            legacySalt: widget.folder.pinSalt,
-          );
+          await PinHasher.verify(_pinController.text, widget.folder.pin!);
       // Skip master PIN verify when folder PIN already matched — saves ~100ms.
       final masterMatches = !pinMatches &&
           masterInfo != null &&
-          await PinHasher.verify(
-            _pinController.text,
-            masterInfo.hash,
-            legacySalt: masterInfo.salt,
-          );
+          await PinHasher.verify(_pinController.text, masterInfo);
       if (!mounted) return;
 
       if (pinMatches || masterMatches) {
-        // Transparent migration from SHA-256 to bcrypt
-        if (pinMatches &&
-            widget.folder.pin != null &&
-            !PinHasher.isBcrypt(widget.folder.pin!)) {
-          PinHasher.hash(_pinController.text)
-              .then((h) => StorageService().migratePinToBcrypt(widget.folder.id!, h))
-              .catchError((e) => debugPrint('PIN bcrypt migration failed: $e'))
-              .ignore();
-        }
         // Reset security-question attempt counter and lockout cycle counter
         // so recovery and lockout backoff are usable again after a successful
         // PIN entry (fire-and-forget — non-critical).
